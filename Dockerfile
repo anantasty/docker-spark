@@ -1,5 +1,5 @@
 FROM sequenceiq/hadoop-ubuntu:2.6.0
-MAINTAINER SequenceIQ
+MAINTAINER anantasty
 
 #support for Hadoop 2.4.0+
 RUN curl -s http://d3kbcqa49mib13.cloudfront.net/spark-1.3.0-bin-hadoop2.4.tgz | tar -xz -C /usr/local/

@@ -6,21 +6,21 @@ The base Hadoop Docker image is also available as an official [Docker image](htt
 
 ##Pull the image from Docker Repository
 ```
-docker pull sequenceiq/spark:1.3.0
+docker pull anantasty/ubuntu_spark_ipython:1.0
 ```
 
 ## Building the image
 ```
-docker build --rm -t sequenceiq/spark:1.3.0 .
+docker build --rm -t anantasty/ubuntu_spark_ipython:1.0 .
 ```
 
 ## Running the image
 ```
-docker run -i -t -h sandbox sequenceiq/spark:1.3.0 bash
+docker run -i -t -h -p 8888:8888 sandbox anantasty/ubuntu_spark_ipython:1.0 bash
 ```
 or
 ```
-docker run -d -h sandbox sequenceiq/spark:1.3.0 -d
+docker run -d -h -p 8888:8888 sandbox anantasty/ubuntu_spark_ipython:1.0 -d
 ```
 
 ## Versions
@@ -60,3 +60,23 @@ Estimating Pi (yarn-client mode):
 # execute the the following command which should print the "Pi is roughly 3.1418" to the screen
 spark-submit --class org.apache.spark.examples.SparkPi --master yarn-client --driver-memory 1g --executor-memory 1g --executor-cores 1 $SPARK_HOME/lib/spark-examples-1.3.0-hadoop2.4.0.jar
 ```
+
+### IPython Notebook
+
+Ipython notebook is running on port 8888.
+You can connect to it by visiting localhost:8888 on your web browser.
+
+### Examples
+
+Examples can be found at https://github.com/anantasty/spark-examples
+
+To start the container with examples loaded 
+
+```
+docker run -i -t -h -p 8888:8888 -v <examples_dir>:/ipython sandbox anantasty/ubuntu_spark_ipython:1.0 bash
+```
+or
+```
+docker run -d -h -p 8888:8888 -v <examples_dir>:/ipython sandbox anantasty/ubuntu_spark_ipython:1.0 -d
+```
+
