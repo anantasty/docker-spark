@@ -26,7 +26,8 @@ RUN sudo apt-get install -y python-pip\
                             liblapack-dev\
                             gfortran\
                             build-essential\
-                            python-qt4
+                            python-qt4\
+                            git
 RUN pip install markupsafe\
                 jsonschema\
                 numpy\

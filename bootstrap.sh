@@ -18,6 +18,11 @@ service ssh start
 $HADOOP_PREFIX/sbin/start-dfs.sh > /var/log/start-dfs.log
 $HADOOP_PREFIX/sbin/start-yarn.sh > /var/log/start-yarn.log
 
+cd /ipython
+git pull https://github.com/anantasty/spark-examples.git
+cd spark-examples
+hadoop fs -put data /user/
+
 supervisord
 
 CMD=${1:-"exit 0"}
