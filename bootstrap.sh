@@ -12,18 +12,20 @@ cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; 
 # altering the core-site configuration
 sed s/HOSTNAME/$HOSTNAME/ /usr/local/hadoop/etc/hadoop/core-site.xml.template > /usr/local/hadoop/etc/hadoop/core-site.xml
 
+RUN sed -i '/localhost/d' /etc/hosts
 
-service sshd start
-$HADOOP_PREFIX/sbin/start-dfs.sh
-$HADOOP_PREFIX/sbin/start-yarn.sh
+service ssh start
+$HADOOP_PREFIX/sbin/start-dfs.sh > /var/log/start-dfs.log
+$HADOOP_PREFIX/sbin/start-yarn.sh > /var/log/start-yarn.log
 
 supervisord
 
 CMD=${1:-"exit 0"}
 if [[ "$CMD" == "-d" ]];
 then
-	service sshd stop
-	/usr/sbin/sshd -D -d
+    while true; do sleep 1000; done
+	# service sshd stop
+	# /usr/sbin/sshd -D -d
 else
 	/bin/bash -c "$*"
 fi

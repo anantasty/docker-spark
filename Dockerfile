@@ -1,12 +1,13 @@
 FROM sequenceiq/hadoop-ubuntu:2.6.0
 MAINTAINER anantasty
 
-#support for Hadoop 2.4.0+
+# #support for Hadoop 2.4.0+
 RUN curl -s http://d3kbcqa49mib13.cloudfront.net/spark-1.3.0-bin-hadoop2.4.tgz | tar -xz -C /usr/local/
 RUN cd /usr/local && ln -s spark-1.3.0-bin-hadoop2.4 spark
 ENV SPARK_HOME /usr/local/spark
 RUN mkdir $SPARK_HOME/yarn-remote-client
 ADD yarn-remote-client $SPARK_HOME/yarn-remote-client
+
 RUN $BOOTSTRAP && $HADOOP_PREFIX/bin/hadoop dfsadmin -safemode leave && $HADOOP_PREFIX/bin/hdfs dfs -put $SPARK_HOME-1.3.0-bin-hadoop2.4/lib /spark
 
 ENV YARN_CONF_DIR $HADOOP_PREFIX/etc/hadoop
@@ -30,11 +31,15 @@ RUN pip install markupsafe\
                 jsonschema\
                 numpy\
                 pandas\
-                matplotlib\
+                "matplotlib"\
                 supervisor
 RUN pip install "ipython[all]"
 
+RUN sed -i '27i from matplotlib.cbook import _string_to_bool' /usr/local/lib/python2.7/dist-packages/mpl_toolkits/mplot3d/axes3d.py
+
 EXPOSE 8888
+EXPOSE 9000
+
 ADD start-supervisor.sh /usr/local/bin/
 ADD supervisord.conf /etc/supervisord.conf
                 
@@ -43,6 +48,9 @@ RUN mkdir /var/log/supervisord/
 COPY bootstrap.sh /etc/bootstrap.sh
 RUN chown root.root /etc/bootstrap.sh
 RUN chmod 700 /etc/bootstrap.sh
+
+ADD yarn-remote-client/core-site.xml /usr/local/hadoop/etc/hadoop/core-site.xml
+ADD yarn-remote-client/yarn-site.xml /usr/local/hadoop/etc/hadoop/yarn-site.xml
 
 RUN mkdir /ipython
 ENTRYPOINT ["/etc/bootstrap.sh"]
